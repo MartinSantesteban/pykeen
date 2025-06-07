@@ -1350,6 +1350,8 @@ def pipeline(  # noqa: C901
     evaluation_fallback: bool = False,
     filter_validation_when_testing: bool = True,
     use_tqdm: bool | None = None,
+    #3 yo
+    evaluation: bool = True
 ) -> PipelineResult:
     """Train and evaluate a model.
 
@@ -1552,23 +1554,26 @@ def pipeline(  # noqa: C901
         stopper_kwargs=stopper_kwargs,
         use_tqdm=use_tqdm,
     )
-
-    metric_results, evaluate_seconds = _handle_evaluation(
-        _result_tracker=_result_tracker,
-        model_instance=model_instance,
-        evaluator_instance=evaluator_instance,
-        stopper_instance=stopper_instance,
-        training=training,
-        testing=testing,
-        validation=validation,
-        training_kwargs=training_kwargs,
-        evaluation_kwargs=evaluation_kwargs,
-        use_testing_data=use_testing_data,
-        evaluation_fallback=evaluation_fallback,
-        filter_validation_when_testing=filter_validation_when_testing,
-        use_tqdm=use_tqdm,
-    )
-    _result_tracker.end_run()
+    if evaluation: 
+        metric_results, evaluate_seconds = _handle_evaluation(
+            _result_tracker=_result_tracker,
+            model_instance=model_instance,
+            evaluator_instance=evaluator_instance,
+            stopper_instance=stopper_instance,
+            training=training,
+            testing=testing,
+            validation=validation,
+            training_kwargs=training_kwargs,
+            evaluation_kwargs=evaluation_kwargs,
+            use_testing_data=use_testing_data,
+            evaluation_fallback=evaluation_fallback,
+            filter_validation_when_testing=filter_validation_when_testing,
+            use_tqdm=use_tqdm,
+        )
+        _result_tracker.end_run()
+    else: 
+        metric_results = None
+        evaluate_seconds = None
 
     return PipelineResult(
         random_seed=_random_seed,
