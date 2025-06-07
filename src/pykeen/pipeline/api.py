@@ -1572,6 +1572,7 @@ def pipeline(  # noqa: C901
         )
         _result_tracker.end_run()
     else: 
+        print("Skipping evaluation.")
         metric_results = None
         evaluate_seconds = None
 
